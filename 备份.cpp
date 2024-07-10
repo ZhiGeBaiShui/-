@@ -16,6 +16,77 @@ long long myRand(long long l,long long r) {
     return uid(rng);
 }
 
+template<int P>
+struct MInt {
+    int x;
+    constexpr MInt(): x(0) {}
+    template<class T>
+    constexpr MInt(T x): x(norm(x%P)) {}
+    constexpr static int norm(int x) {
+        return x<0? x+P: x>=P? x-P: x;
+    }
+    constexpr MInt inv() const{
+        int a=x, b=P, u=1, v=0;
+        while(b) {
+            int t = a/b;
+            swap((a-=t*b), b);
+            swap((u-=t*v), v);
+        }
+        return u;
+    }
+    constexpr MInt operator-() const{
+        return MInt()-*this;
+    }
+    constexpr MInt& operator+=(const MInt& a) {
+        x=norm(x+a.x);
+        return *this;
+    }
+    constexpr MInt& operator-=(const MInt& a) {
+        x=norm(x-a.x);
+        return *this;
+    }
+    constexpr MInt& operator*=(const MInt& a) {
+        x=1ll*x*a.x%P;
+        return *this;
+    }
+    constexpr MInt& operator/=(const MInt& a) {
+        return *this*=a.inv();
+    }
+    constexpr friend MInt operator+(MInt l,const MInt& r) {
+        return l+=r;
+    }
+    constexpr friend MInt operator-(MInt l,const MInt& r) {
+        return l-=r;
+    }
+    constexpr friend MInt operator*(MInt l,const MInt& r) {
+        return l*=r;
+    }
+    constexpr friend MInt operator/(MInt l,const MInt& r) {
+        return l/=r;
+    }
+    constexpr explicit operator bool()const {
+        return x!=0;
+    }
+    constexpr bool operator!()const {
+        return x==0;
+    }
+    friend ostream& operator<<(ostream& os,const MInt& a) {
+        return os<<a.x;
+    }
+    string find_Fraction()const {
+        for(int i=1; i<=1000000; ++i) {
+            if((*this*i).x<=100) {
+                return to_string((*this*i).x) + "/" + to_string(i);
+            }
+        }
+        return "not find.";
+    }
+};
+constexpr int P=1e9+7;
+ 
+using Z=MInt<P>;
+
+
 const int key=1337;
 const int N=1e6+10;
 const int MAXN = 5100;
@@ -50,7 +121,7 @@ int main()
 {
 	ios::sync_with_stdio(false);cin.tie(0);cout.tie(0);
 	int t=1;
-	//cin>>t;
+	cin>>t;
 	while(t--)
 	{
 		solve();
