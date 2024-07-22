@@ -111,8 +111,6 @@ long long qpow(long long x,long long y)
 	return tmp;
 }
 
-
-
 void solve()
 {
 }
